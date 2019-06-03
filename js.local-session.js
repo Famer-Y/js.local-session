@@ -1,55 +1,43 @@
-// project : js.local-session
+var LS = function(type){
+	var self = this;
+	self._storage = (type === 'session' ? window.sessionStorage : window.localStorage);
 
-// github  : https://github.com/Famer-Y/js.local-session
-
-;(function(root, factory){
-	if (typeof define === 'function' && define.amd) {
-		define(factory);
-	} else if ( typeof module === "object" && typeof module.exports === "object" ) {
-		module.exports = factory();
-	} else {
-		var oldStorage = root.storage;
-		var api = root.storage = factory(window).init();
-		api.noConflict = function(type){
-			api = factory(window).init(type);
-			return api;
+	self.set = function(name, value) {
+		try {
+			if (isUndifined(name) || isUndifined(value)) {
+				throw new Error("name or value is not defined!!!");
+			}
+			self._storage.setItem(name, value);
+		} catch (e){
+			console.error(e);
 		}
 	}
-}(typeof window !== "undefined" ? window : this, function(window, type){
-	var ls = window.localStorage;
-	console.log(window, type);
-	function storage() {
-	}
 
-	storage.set = function(name, value) {
-		ls.setItem(name, JSON.stringify(value));
-	}
-
-	storage.get = function(name, defaultValue) {
-		if (undefined === ls.getItem(name)) {
+	self.get = function(name) {
+		if (undefined === self._storage.getItem(name)) {
             if (undefined !== defaultValue) {
-                storage.set(name, defaultValue);
+                self.set(name, defaultValue);
                 return defaultValue;
             } else {
                 return null;
             }
         }
         try {
-            return JSON.parse(ls.getItem(name));
+            return JSON.parse(self._storage.getItem(name));
         } catch (e) {
-        	console.log(e);
-            storage.set(name, defaultValue);
+            self.set(name, defaultValue);
             return defaultValue;
         }
 	}
 
-	storage.remove = function(name) {
-		ls.removeItem(name);
+	self.remove = function(name) {
+		self._storage.removeItem(name)
 	}
 
-	storage.init = function(){
-		ls = type === "session" ? window.sessionStorage : window.localStorage;
-		return storage;
+	function isUndifined(key){
+		if (key === undefined) {
+			return true;
+		}
+		return false;
 	}
-	return storage;
-}));
+}
