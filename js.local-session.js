@@ -1,20 +1,20 @@
 var LS = function(type){
-	var self = this;
-	self._storage = (type === 'session' ? window.sessionStorage : window.localStorage);
+    var self = this;
+    self._storage = (type === 'session' ? window.sessionStorage : window.localStorage);
 
-	self.set = function(name, value) {
-		try {
-			if (isUndifined(name) || isUndifined(value)) {
-				throw new Error("name or value is not defined!!!");
-			}
-			self._storage.setItem(name, value);
-		} catch (e){
-			console.error(e);
-		}
-	}
+    self.set = function(name, value) {
+        try {
+            if (isUndifined(name) || isUndifined(value)) {
+                throw new Error("name or value is not defined!!!");
+            }
+            self._storage.setItem(name, value);
+        } catch (e){
+            console.error(e);
+        }
+    }
 
-	self.get = function(name) {
-		if (undefined === self._storage.getItem(name)) {
+    self.get = function(name) {
+        if (undefined === self._storage.getItem(name)) {
             if (undefined !== defaultValue) {
                 self.set(name, defaultValue);
                 return defaultValue;
@@ -28,16 +28,16 @@ var LS = function(type){
             self.set(name, defaultValue);
             return defaultValue;
         }
-	}
+    }
 
-	self.remove = function(name) {
-		self._storage.removeItem(name)
-	}
+    self.remove = function(name) {
+        self._storage.removeItem(name)
+    }
 
-	function isUndifined(key){
-		if (key === undefined) {
-			return true;
-		}
-		return false;
-	}
+    function isUndifined(key){
+        if (key === undefined) {
+            return true;
+        }
+        return false;
+    }
 }
