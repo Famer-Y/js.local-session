@@ -1,6 +1,7 @@
-// project : js.local-session
-
-// github  : https://github.com/Famer-Y/js.local-session
+/* project : js.local-session
+ * author  : Famer
+ * github  : https://github.com/Famer-Y/js.local-session
+ */
 
 ;(function(root, factory){
     if (typeof define === 'function' && define.amd) {
