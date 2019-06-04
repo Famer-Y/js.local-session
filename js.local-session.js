@@ -19,7 +19,7 @@
             }
             if (1 === arguments.length) {
                 var param = arguments[0];
-                if ("Object" !== analyzeType(param)) {
+                if (Object !== analyzeType(param)) {
                     throw new Error("arguments must be Object, when the number of arguments only 1.");
                 }
                 for (var item in param) {
@@ -100,12 +100,12 @@
             }
             if (1 === arguments.length) {
                 var param = arguments[0];
-                if ("Array" === analyzeType(param)) {
+                if (Array === analyzeType(param)) {
                     for (var index = 0; index < param.length; index ++) {
                         var name = param[index];
                         ls.removeItem(name);
                     }
-                } else if ("String" === analyzeType(param)) {
+                } else if (String === analyzeType(param)) {
                     ls.removeItem(param);
                 }
             }
@@ -115,19 +115,19 @@
     function analyzeType(o){
         switch (Object.prototype.toString.call(o)) {
             case "[object Object]":
-                return "Object";
+                return Object;
             case "[object Array]":
-                return "Array";
+                return Array;
             case "[object Number]":
-                return "Number";
+                return Number;
             case "[object Boolean]":
-                return "Boolean";
+                return Boolean;
             case "[object String]":
-                return "String";
+                return String;
             default:
-                return "undefined";
+                return undefined;
         }
     }
-    
+
     return storage;
 }));
