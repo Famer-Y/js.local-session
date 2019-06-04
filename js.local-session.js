@@ -10,7 +10,7 @@
         module.exports = factory(root);
     } else {
         var api = oldCookies = root.storage = factory(window);
-        api.noConflict = function(type){
+        api.reproduce = function(type){
             root.storage = oldCookies;
             api = factory(window, type);
             return api;
