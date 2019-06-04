@@ -54,11 +54,9 @@
                 return result;
             }
             if (arguments.length >= 1) {
-                console.log(arguments);
                 var name = arguments[0];
                 var defaultValue = arguments[1];
                 if (undefined === ls[name]) {
-                    console.log(defaultValue);
                     if (undefined === defaultValue) {
                         return null;
                     } else {
