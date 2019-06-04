@@ -8,10 +8,15 @@
     } else if ( typeof module === "object" && typeof module.exports === "object" ) {
         module.exports = factory(root);
     } else {
-        root.storage = factory(window);
+        var api = oldCookies = root.storage = factory(window);
+        api.noConflict = function(type){
+            root.storage = oldCookies;
+            api = factory(window, type);
+            return api;
+        }
     }
-}(typeof window !== "undefined" ? window : this, function(window){
-    var ls = window.localStorage;
+}(typeof window !== "undefined" ? window : this, function(window, type){
+    var ls = ("session" === type ? window.sessionStorage : window.localStorage);
     var storage = {
         set: function(){
             if (0 === arguments.length) {
