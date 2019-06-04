@@ -20,7 +20,7 @@
             if (1 === arguments.length) {
                 var param = arguments[0];
                 if (Object !== analyzeType(param)) {
-                    throw new Error("arguments must be Object, when the number of arguments only 1.");
+                    throw new Error("argument must be Object, when the number of arguments only 1.");
                 }
                 for (var item in param) {
                     ls.setItem(item, JSON.stringify(param[item]));
