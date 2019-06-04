@@ -9,10 +9,10 @@
     } else if ( typeof module === "object" && typeof module.exports === "object" ) {
         module.exports = factory(root);
     } else {
-        var api = oldCookies = root.storage = factory(window);
+        var api = oldCookies = root.storage = factory(root);
         api.reproduce = function(type){
             root.storage = oldCookies;
-            api = factory(window, type);
+            api = factory(root, type);
             return api;
         }
     }
@@ -81,13 +81,12 @@
             }
             if (arguments.length >= 1) {
                 var pattern = arguments[0];
-                if (!(pattern instanceof RegExp)) {
-                    throw new Error("argument must be RegExp.");
-                }
+                var modifier = arguments[1];
                 var result = {};
+                var regexp = new RegExp(pattern, modifier);
                 for (var index = 0; index < ls.length; index ++) {
                     var key = ls.key(index);
-                    if (pattern.test(key)) {
+                    if (regexp.test(key)) {
                         try {
                             result[key] = JSON.parse(ls.getItem(key));  
                         } catch (e) {
@@ -96,7 +95,7 @@
                         }
                     }
                 }
-                return result;
+                return result;   
             }
         },
 
