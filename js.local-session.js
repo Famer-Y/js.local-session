@@ -76,7 +76,7 @@
 
         getByRegex: function(){
             if (0 === arguments.length) {
-                throw new Error("1 argument required, but only 0 present.");
+                throw new Error("1 or 2 arguments required, but only 0 present.");
             }
             return regex(arguments);
         },
@@ -100,7 +100,7 @@
 
         removeByRegex: function(){
             if (0 === arguments.length) {
-                throw new Error("1 argument required, but only 0 present.");
+                throw new Error("1 or 2 arguments required, but only 0 present.");
             }
             return regex(arguments, "remove");
         }
