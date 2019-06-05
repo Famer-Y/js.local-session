@@ -1,4 +1,5 @@
 /* project : js.local-session
+ * version : 1.0.0
  * author  : Famer
  * github  : https://github.com/Famer-Y/js.local-session
  */
@@ -45,7 +46,7 @@
                 for (var index = 0; index < ls.length; index ++) {
                     var key = ls.key(index);
                     try {
-                        result[key] = JSON.parse(ls.getItem(key));  
+                        result[key] = JSON.parse(ls.getItem(key));
                     } catch (e) {
                         console.debug(e);
                         result[key] = ls.getItem(key);
@@ -73,28 +74,11 @@
             }
         },
 
-        regex: function(){
+        getByRegex: function(){
             if (0 === arguments.length) {
                 throw new Error("1 argument required, but only 0 present.");
             }
-            if (arguments.length >= 1) {
-                var pattern = arguments[0];
-                var modifier = arguments[1];
-                var result = {};
-                var regexp = new RegExp(pattern, modifier);
-                for (var index = 0; index < ls.length; index ++) {
-                    var key = ls.key(index);
-                    if (regexp.test(key)) {
-                        try {
-                            result[key] = JSON.parse(ls.getItem(key));  
-                        } catch (e) {
-                            console.debug(e);
-                            result[key] = ls.getItem(key);
-                        }
-                    }
-                }
-                return result;   
-            }
+            return regex(arguments);
         },
 
         remove: function(){
@@ -112,6 +96,39 @@
                     ls.removeItem(param);
                 }
             }
+        },
+
+        removeByRegex: function(){
+            if (0 === arguments.length) {
+                throw new Error("1 argument required, but only 0 present.");
+            }
+            return regex(arguments, "remove");
+        }
+    }
+
+    function regex() {
+        var argument = arguments[0];
+        var remove = analyzeType(arguments[1]) === 'string' && arguments[1] === "remove" ? true : false;
+        if (argument.length >= 1) {
+            var pattern = argument[0];
+            var modifier = argument[1];
+            var result = {};
+            var regexp = new RegExp(pattern, modifier);
+            for (var index = 0; index < ls.length; index ++) {
+                var key = ls.key(index);
+                if (regexp.test(key)) {
+                    try {
+                        result[key] = JSON.parse(ls.getItem(key));
+                    } catch (e) {
+                        console.debug(e);
+                        result[key] = ls.getItem(key);
+                    }
+                    if (remove) {
+                        ls.removeItem(key);
+                    }
+                }
+            }
+            return result;
         }
     }
 
