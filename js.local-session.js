@@ -40,95 +40,63 @@
             }
         },
 
-        get: function(){
-            if (0 === arguments.length) {
-                var result = {};
-                for (var index = 0; index < ls.length; index ++) {
-                    var key = ls.key(index);
-                    try {
-                        result[key] = JSON.parse(ls.getItem(key));
-                    } catch (e) {
-                        console.debug(e);
-                        result[key] = ls.getItem(key);
-                    }
-                }
-                return result;
-            }
-            if (arguments.length >= 1) {
-                var name = arguments[0];
-                var defaultValue = arguments[1];
-                if (undefined === ls[name]) {
+        get: function(param, defaultValue){
+            // get by key or set default-value
+            if ("string" === analyzeType(param)) {
+                if (undefined === ls[param]) {
                     if (undefined === defaultValue) {
                         return null;
                     } else {
-                        storage.set(name, defaultValue);
+                        storage.set(param, defaultValue);
                         return defaultValue;
                     }
                 }
                 try {
-                    return JSON.parse(ls.getItem(name));
+                    return JSON.parse(ls.getItem(param));
                 } catch (e) {
                     console.debug(e);
-                    return ls.getItem(name);
+                    return ls.getItem(param);
                 }
             }
-        },
-
-        getBasedOnRegex: function(){
-            if (0 === arguments.length) {
-                throw new Error("1 or 2 arguments required, but only 0 present.");
-            }
-            return regex(arguments);
-        },
-
-        remove: function(){
-            if (0 === arguments.length) {
-                throw new Error("1 argument required, but only 0 present.");
-            }
-            if (1 === arguments.length) {
-                var param = arguments[0];
-                if ("array" === analyzeType(param)) {
-                    for (var index = 0; index < param.length; index ++) {
-                        var name = param[index];
-                        ls.removeItem(name);
-                    }
-                } else if ("string" === analyzeType(param)) {
-                    ls.removeItem(param);
-                }
-            }
-        },
-
-        removeBasedOnRegex: function(){
-            if (0 === arguments.length) {
-                throw new Error("1 or 2 arguments required, but only 0 present.");
-            }
-            return regex(arguments, "remove");
-        }
-    }
-
-    function regex() {
-        var argument = arguments[0];
-        var remove = analyzeType(arguments[1]) === 'string' && arguments[1] === "remove" ? true : false;
-        if (argument.length >= 1) {
-            var pattern = argument[0];
-            var modifier = argument[1];
+            // get all or get by regrex
             var result = {};
-            var regexp = new RegExp(pattern, modifier);
             for (var index = 0; index < ls.length; index ++) {
                 var key = ls.key(index);
-                if (regexp.test(key)) {
-                    try {
-                        result[key] = JSON.parse(ls.getItem(key));
-                    } catch (e) {
-                        console.debug(e);
-                        result[key] = ls.getItem(key);
-                    }
-                    if (remove) {
+                var value = "";
+                try {
+                    value = JSON.parse(ls.getItem(key));
+                } catch (e) {
+                    value = ls.getItem(key);
+                }
+                if (param instanceof RegExp) {
+                    if (param.test(key)) {
+                        result[key] = value;
+                    }                   
+                } else {
+                    result[key] = value;
+                }
+            }
+            return result;
+        },
+
+        remove: function(param){
+            if ("string" === analyzeType(param)) {
+                ls.removeItem(param);
+            }
+            if (param instanceof RegExp) {
+                for (var index = 0; index < ls.length; index ++) {
+                    var key = ls.key(index);
+                    if (param.test(key)) {
                         ls.removeItem(key);
                     }
                 }
             }
-            return result;
+            if ("array" === analyzeType(param)) {
+                for (var index = 0; index < param.length; index ++) {
+                    var key = param[index];
+                    ls.removeItem(key);
+                }
+            }
         }
     }
 
